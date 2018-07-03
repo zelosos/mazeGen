@@ -71,6 +71,49 @@ public class Maze {
 								maze[i][j]= true; 			
 	}
 	
+	public void removeDeadEnds()
+	{
+		ArrayList<Direction> dirVisitOrder = new ArrayList<Direction>();
+		dirVisitOrder.add(Direction.UP);
+		dirVisitOrder.add(Direction.DOWN);
+		dirVisitOrder.add(Direction.LEFT);
+		dirVisitOrder.add(Direction.RIGHT);
+		int size = maze.length;
+		
+		for (int y=0; y<maze.length; y++)
+		{
+			for (int x=0; x<maze.length; x++)
+			{
+				Field currentField = new Field(x,y);
+				int neighbours = 0;
+				Direction origin = Direction.UP;
+				for (Direction dir: directions)
+				{
+					Field targetField = currentField.neighbour(dir);
+					if (targetField.isInBounds(size))
+						if (maze[targetField.X()][targetField.Y()])
+						{
+							origin = dir;
+							neighbours++;
+						}
+				}
+				if (neighbours == 1)
+				{
+					Collections.shuffle(dirVisitOrder);
+					for (Direction dir: dirVisitOrder)
+					{
+						if (! dir.equals(origin) && currentField.neighbour(dir).neighbour(dir).isInBounds(size))
+						{
+							maze[currentField.neighbour(dir).X()][currentField.neighbour(dir).Y()] = true;
+							break;
+						}
+					}
+				}
+				
+			}
+		}
+	}
+	
 	private void fillLastLineOfMaze()
 	{
 		for (int i=1; i<maze.length-1; i++)

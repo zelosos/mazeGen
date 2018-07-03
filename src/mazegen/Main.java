@@ -10,15 +10,67 @@ public class Main
 
 	public static void main(String[] args)
 	{
-		Maze maze = new Maze(1001);
-		System.out.println("Create Maze ...");
-		maze.depthFirst();
-		System.out.println("Add Crossings ...");
-		maze.addCrossings(0.001);
-		System.out.println("Saving ...");
-		saveImage(maze, "smallMaze.png");
-		//maze.print();
-		System.out.println("finished");
+		createMazeDepthFirst(11, 2, "tinyDepthFirst");
+		createMazeDepthFirstNoDeadEnds(11, 2, "tinyDepthFirstNoDeadEnds");
+		createMazeDepthFirstWithCrossings(11, 0.05, 2, "tinyDepthFirstWithCrossings");
+		
+		createMazeDepthFirst(101, 2, "smallDepthFirst");
+		createMazeDepthFirstNoDeadEnds(101, 2, "smallDepthFirstNoDeadEnds");
+		createMazeDepthFirstWithCrossings(101, 0.001, 2, "smallDepthFirstWithCrossings");
+		
+		createMazeDepthFirst(1001, 2, "middleDepthFirst");
+		createMazeDepthFirstNoDeadEnds(1001, 2, "middleDepthFirstNoDeadEnds");
+		createMazeDepthFirstWithCrossings(10001, 0.001, 2, "middleDepthFirstWithCrossings");
+		
+		createMazeDepthFirst(1001, 2, "bigDepthFirst");
+		createMazeDepthFirstNoDeadEnds(10001, 2, "bigDepthFirstNoDeadEnds");
+		createMazeDepthFirstWithCrossings(10001, 0.001, 2, "bigDepthFirstWithCrossings");
+	}
+	
+	private static void createMazeDepthFirst(int size, int amount, String name)
+	{
+		for (int i=0; i<amount; i++)
+		{
+			Maze maze = new Maze(size);
+			System.out.println("Create Maze ...");
+			maze.depthFirst();
+			System.out.println("Saving ...");
+			String fileName = name + i +".png";
+			saveImage(maze, fileName);
+			System.out.println("finished");
+		}
+	}
+	
+	private static void createMazeDepthFirstWithCrossings(int size, double crossingsPercentage, int amount, String name)
+	{
+		for (int i=0; i<amount; i++)
+		{
+			Maze maze = new Maze(size);
+			System.out.println("Create Maze ...");
+			maze.depthFirst();
+			System.out.println("Add Crossings ...");
+			maze.addCrossings(crossingsPercentage);
+			System.out.println("Saving ...");
+			String fileName = name + i +".png";
+			saveImage(maze, fileName);
+			System.out.println("finished");
+		}
+	}
+	
+	private static void createMazeDepthFirstNoDeadEnds(int size, int amount, String name)
+	{
+		for (int i=0; i<amount; i++)
+		{
+			Maze maze = new Maze(size);
+			System.out.println("Create Maze ...");
+			maze.depthFirst();
+			System.out.println("Removing Deadends ...");
+			maze.removeDeadEnds();
+			System.out.println("Saving ...");
+			String fileName = name + i +".png";
+			saveImage(maze, fileName);
+			System.out.println("finished");
+		}
 	}
 
 	private static void saveImage(Maze maze, String fileName)
